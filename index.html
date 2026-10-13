@@ -1,0 +1,68 @@
+export const clinic = {
+  name: 'Dr. Anjali Pillya Harmony Clinic',
+  shortName: 'Harmony Clinic',
+  doctor: 'Dr. Anjali Pillya',
+  phone: '+91 73979 44453',
+  phoneHref: '+917397944453',
+  whatsapp: '917397944453',
+  address:
+    'Harmony Clinic, Jambhulkar Chowk, Mathew Mansion Road, Phase 2, Jagtap Nagar, Wanwadi, Pune, Maharashtra 411040, India',
+  hours: 'Please call the clinic to confirm timings.',
+  doctorProfile: 'Doctor profile details coming soon.',
+  googleReviewsUrl: '',
+} as const;
+function normalizeIndianMobile(phone: string) {
+  const compact = phone.replace(/[\s()-]/g, '');
+  const national = compact.replace(/^(?:\+91|91)/, '').replace(/^0/, '');
+  return /^[6-9]\d{9}$/.test(national);
+}
+
+const submit = (event: FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+
+  if (!validate()) {
+    setStatus('Please review the highlighted fields.');
+    return;
+  }
+
+  const details = [
+    'Appointment request for Harmony Clinic',
+    `Full Name: ${values.name.trim()}`,
+    `Phone Number: ${values.phone.trim()}`,
+    `Preferred Date: ${values.date}`,
+    values.time ? `Preferred Time: ${values.time}` : '',
+    values.reason.trim()
+      ? `Service or Reason for Visit: ${values.reason.trim()}`
+      : '',
+    values.message.trim()
+      ? `Additional Message: ${values.message.trim()}`
+      : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  const url = `https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(details)}`;
+  window.open(url, '_blank', 'noopener,noreferrer');
+};
+function App() {
+  useScrollReveals();
+
+  return (
+    <div className="site-shell">
+      <Header />
+      <main id="main-content">
+        <Hero />
+        <Introduction />
+        <DoctorProfile />
+        <Services />
+        <Reasons />
+        <ReviewSummary />
+        <Appointment />
+        <Contact />
+        <FAQs />
+      </main>
+      <Footer />
+      <WhatsAppShortcut />
+    </div>
+  );
+}
